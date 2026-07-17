@@ -38,4 +38,4 @@ go mod init "github.com/trevorgrabham/AoC-26/day-$day/part-2"
 touch input/example.txt input/challenge.txt
 
 cd "../part-1"
-vi input/example.txt
+vi input/example.txt && vi input/challenge.txt && vi main.go
