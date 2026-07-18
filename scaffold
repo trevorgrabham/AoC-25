@@ -3,17 +3,21 @@
 part_one_next_script_template=$(cat << 'EOF'
   #!/usr/bin/env bash 
   
-  if [[ $PWD =~ /day-([0-9]+)/part-2$ ]]; then 
+  if [[ $PWD =~ /day-([0-9]+)/part-1$ ]]; then 
     day=${BASH_REMATCH[1]}
     ((day++))
   
+    git switch -c day$day || git switch day$day
     gtaa && gtc "completed day $day, part 1"
+    git push origin day$day
+
     cd ../part-2
     vi main.go
   else 
     echo "invalid working dir $PWD"
   fi
 EOF
+)
 
 part_two_next_script_template=$(cat << 'EOF'
   #!/usr/bin/env bash 
@@ -23,9 +27,12 @@ part_two_next_script_template=$(cat << 'EOF'
     day=${BASH_REMATCH[1]}
     ((day++))
   
+    git switch -c day$day || git switch day$day
     gtaa && gtc "completed day $day, part 2"
+    git push origin day$day
+
     cd ../..
-    . scaffold.sh "$day"
+    . scaffold "$day"
   else 
     echo "invalid working dir $PWD"
   fi
@@ -61,15 +68,15 @@ mkdir -p "day-$day/part-1/input" "day-$day/part-2/input"
 
 cd "day-$day/part-1"
 echo "$go_template" > main.go 
-echo "$part_one_next_script_template" > next.sh
-chmod 755 next.sh
+echo "$part_one_next_script_template" > next
+chmod 755 next
 go mod init "github.com/trevorgrabham/AoC-26/day-$day/part-1"
 touch input/example.txt input/challenge.txt
 
 cd "../part-2"
 echo "$go_template" > main.go 
-echo "$part_two_next_script_template" > next.sh
-chmod 755 next.sh
+echo "$part_two_next_script_template" > next
+chmod 755 next
 go mod init "github.com/trevorgrabham/AoC-26/day-$day/part-2"
 touch input/example.txt input/challenge.txt
 
