@@ -1,12 +1,29 @@
 #!/usr/bin/env bash
 
-next_script_template=$(cat << 'EOF'
+part_one_next_script_template=$(cat << 'EOF'
   #!/usr/bin/env bash 
   
   if [[ $PWD =~ /day-([0-9]+)/part-2$ ]]; then 
     day=${BASH_REMATCH[1]}
     ((day++))
   
+    gtaa && gtc "completed day $day, part 1"
+    cd ../part-2
+    vi main.go
+  else 
+    echo "invalid working dir $PWD"
+  fi
+EOF
+
+part_two_next_script_template=$(cat << 'EOF'
+  #!/usr/bin/env bash 
+  
+  
+  if [[ $PWD =~ /day-([0-9]+)/part-2$ ]]; then 
+    day=${BASH_REMATCH[1]}
+    ((day++))
+  
+    gtaa && gtc "completed day $day, part 2"
     cd ../..
     . scaffold.sh "$day"
   else 
@@ -44,12 +61,14 @@ mkdir -p "day-$day/part-1/input" "day-$day/part-2/input"
 
 cd "day-$day/part-1"
 echo "$go_template" > main.go 
+echo "$part_one_next_script_template" > next.sh
+chmod 755 next.sh
 go mod init "github.com/trevorgrabham/AoC-26/day-$day/part-1"
 touch input/example.txt input/challenge.txt
 
 cd "../part-2"
 echo "$go_template" > main.go 
-echo "$next_script_template" > next.sh
+echo "$part_two_next_script_template" > next.sh
 chmod 755 next.sh
 go mod init "github.com/trevorgrabham/AoC-26/day-$day/part-2"
 touch input/example.txt input/challenge.txt
