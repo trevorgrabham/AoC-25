@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 
-template=$(cat << 'EOF'
+next_script_template=$(cat << 'EOF'
+  #!/usr/bin/env bash 
+  
+  if [[ $PWD =~ /day-([0-9]+)/part-2$ ]]; then 
+    day=${BASH_REMATCH[1]}
+    ((day++))
+  
+    cd ../..
+    . scaffold.sh "$day"
+  else 
+    echo "invalid working dir $PWD"
+  fi
+EOF
+)
+
+go_template=$(cat << 'EOF'
   package main
   
   import (
@@ -28,12 +43,14 @@ fi
 mkdir -p "day-$day/part-1/input" "day-$day/part-2/input"
 
 cd "day-$day/part-1"
-echo "$template" > main.go 
+echo "$go_template" > main.go 
 go mod init "github.com/trevorgrabham/AoC-26/day-$day/part-1"
 touch input/example.txt input/challenge.txt
 
 cd "../part-2"
-echo "$template" > main.go 
+echo "$go_template" > main.go 
+echo "$next_script_template" > next.sh
+chmod 755 next.sh
 go mod init "github.com/trevorgrabham/AoC-26/day-$day/part-2"
 touch input/example.txt input/challenge.txt
 
