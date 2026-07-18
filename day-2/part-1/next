@@ -1,0 +1,15 @@
+#!/usr/bin/env bash 
+
+if [[ $PWD =~ /day-([0-9]+)/part-1$ ]]; then 
+  day=${BASH_REMATCH[1]}
+  ((day++))
+
+  gtaa && gtc "completed day $day, part 1"
+  git push origin 
+
+  cp -r input/ ../part-2/
+  cd ../part-2
+  vi main.go
+else 
+  echo "invalid working dir $PWD"
+fi
