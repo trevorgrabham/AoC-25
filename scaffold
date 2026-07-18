@@ -1,59 +1,61 @@
 #!/usr/bin/env bash
 
 part_one_next_script_template=$(cat << 'EOF'
-  #!/usr/bin/env bash 
-  
-  if [[ $PWD =~ /day-([0-9]+)/part-1$ ]]; then 
-    day=${BASH_REMATCH[1]}
-    ((day++))
-  
-    gtaa && gtc "completed day $day, part 1"
-    git push origin 
+#!/usr/bin/env bash 
 
-    cd ../part-2
-    vi main.go
-  else 
-    echo "invalid working dir $PWD"
-  fi
+if [[ $PWD =~ /day-([0-9]+)/part-1$ ]]; then 
+  day=${BASH_REMATCH[1]}
+  ((day++))
+
+  gtaa && gtc "completed day $((day-1)), part 1"
+  git push origin 
+
+  cp main.go ../part-2/
+  cd ../part-2
+  vi main.go
+else 
+  echo "invalid working dir $PWD"
+fi
 EOF
 )
 
 part_two_next_script_template=$(cat << 'EOF'
-  #!/usr/bin/env bash 
-  
-  
-  if [[ $PWD =~ /day-([0-9]+)/part-2$ ]]; then 
-    day=${BASH_REMATCH[1]}
-    ((day++))
-  
-    gtaa && gtc "completed day $day, part 2"
-    git push origin
+#!/usr/bin/env bash 
 
-    cd ../..
-    . scaffold "$day"
-  else 
-    echo "invalid working dir $PWD"
-  fi
+
+if [[ $PWD =~ /day-([0-9]+)/part-2$ ]]; then 
+  day=${BASH_REMATCH[1]}
+  ((day++))
+
+  gtaa && gtc "completed day $((day-1)), part 2"
+  git push origin
+  cd ../..
+  . scaffold "$day"
+else 
+  echo "invalid working dir $PWD"
+fi
 EOF
 )
 
 go_template=$(cat << 'EOF'
-  package main
-  
-  import (
-	  "fmt"
-	  "log"
-	  "os"
-  )
-  
-  func main() {
-	  inputData, err := os.ReadFile("input/example.txt")
-	  if err != nil {
-		  log.Fatal(err)
-	  }
-  
-	  fmt.Println(string(inputData))
-  }
+package main
+
+import (
+  "bytes"
+	"fmt"
+	"log"
+	"os"
+)
+
+func main() {
+	inputData, err := os.ReadFile("../input/example.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+  inputData = bytes.TrimSpace(inputData)
+
+	fmt.Println(string(inputData))
+}
 EOF
 )
 
@@ -62,21 +64,19 @@ if (( $# < 1 )); then
 else
   day="$1"
 fi
-mkdir -p "day-$day/part-1/input" "day-$day/part-2/input"
+mkdir -p "day-$day/part-1" "day-$day/part-2" "day-$day/input"
 
 cd "day-$day/part-1"
 echo "$go_template" > main.go 
 echo "$part_one_next_script_template" > next
 chmod 755 next
 go mod init "github.com/trevorgrabham/AoC-26/day-$day/part-1"
-touch input/example.txt input/challenge.txt
+touch ../input/example.txt ../input/challenge.txt
 
 cd "../part-2"
-echo "$go_template" > main.go 
 echo "$part_two_next_script_template" > next
 chmod 755 next
 go mod init "github.com/trevorgrabham/AoC-26/day-$day/part-2"
-touch input/example.txt input/challenge.txt
 
 cd "../part-1"
-vi input/example.txt && vi input/challenge.txt && vi main.go
+vi ../input/example.txt && vi ../input/challenge.txt && vi main.go
