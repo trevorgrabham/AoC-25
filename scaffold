@@ -7,9 +7,8 @@ part_one_next_script_template=$(cat << 'EOF'
     day=${BASH_REMATCH[1]}
     ((day++))
   
-    git switch -c day$day || git switch day$day
     gtaa && gtc "completed day $day, part 1"
-    git push origin day$day
+    git push origin 
 
     cd ../part-2
     vi main.go
@@ -27,9 +26,8 @@ part_two_next_script_template=$(cat << 'EOF'
     day=${BASH_REMATCH[1]}
     ((day++))
   
-    git switch -c day$day || git switch day$day
     gtaa && gtc "completed day $day, part 2"
-    git push origin day$day
+    git push origin
 
     cd ../..
     . scaffold "$day"
